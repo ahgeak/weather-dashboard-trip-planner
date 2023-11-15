@@ -26,47 +26,82 @@ var countryCode = "us";
 
 var geocodeApi = `${geocodeUrl}${enteredCity},${enteredState},${countryCode}&limit=5&appid=${weatherApiKey}`
 
+// forecast API documentation: https://openweathermap.org/forecast16
+// API call link: api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={API key}
+var forecastUrl = "http://api.openweathermap.org/data/2.5/forecast?";
+
+var forecastApi = `${forecastUrl}lat=${enteredCityLat}&lon=${enteredCityLon}&appid=${weatherApiKey}`
+console.log(forecastApi);
+
 var longitude;
-var latitude
+var latitude;
 
 function fetchGeocode(){
     fetch(geocodeApi)
         .then (function(response) {
-            console.log(response);
+            // console.log(response);
             return response.json();
         })
         .then (function (data) {
-            console.log(data);
+            // console.log(data);
             latitude = data[0].lat;
-            console.log(latitude);
+            // console.log(latitude);
             longitude = data[0].lon
-            console.log(longitude);
+            // console.log(longitude);
             return latitude, longitude;
         })
         .catch(function (err) {
             console.error(err);
         });
 }
+console.log("this is the lat " + latitude); // this comes back undefined
+
+var currentDate; // I need to figure out how to do the date element
+var currentTemp;
+var currentWind;
+var currentHumidity;
 
 function fetchWeather(){
     fetch(currentWeatherApi)
         .then (function(response) {
-            console.log(response);
+            // console.log(response);
             return response.json();
         })
         .then (function (data) {
             console.log(data);
+            currentTemp = data.main.temp;
+            console.log(currentTemp); //Why is this 280 degrees?
+            currentWind = data.wind.speed;
+            console.log(currentWind);
+            console.log(data.weather[0].icon) //Not sure if this can connect to icon later? Need to research
+            currentHumidity = data.main.humidity;
+            console.log(currentHumidity);
         })
         .catch(function (err) {
             console.error(err);
         });
 }
 
-console.log("this is the lat " + latitude); // this comes back undefined
+function fetchForecast(){
+    fetch(forecastApi)
+        .then (function(response) {
+            // console.log(response);
+            return response.json();
+        })
+        .then (function (data) {
+            console.log(data);
+            // next I need to get the 5 day forecast to display on the screen
+        })
+        .catch(function (err) {
+            console.error(err);
+        });
+}
 
 fetchGeocode();
 
 fetchWeather();
+
+fetchForecast();
 
 function currentWeather() {
 }
