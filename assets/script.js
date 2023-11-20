@@ -53,7 +53,7 @@ function fetchWeather(lat, lon) {
       var currentWind = data.wind.speed;
       var currentHumidity = data.main.humidity;
       var iconcode = data.weather[0].icon;
-      var iconurl = "http://openweathermap.org/img/w/" + iconcode + ".png";
+      var iconurl = "https://openweathermap.org/img/w/" + iconcode + ".png";
 
       // Display the searched city on the page, update the HTML elements with the temp, wind, humidity and icon
       cityNameEl.textContent = `${data.name} (${currentDate})`;
@@ -77,7 +77,7 @@ function fetchWeather(lat, lon) {
 
 // fetchForecast is passed in lat and lon to get the 5 day forecast data to pass into displayForecast function
 function fetchForecast(lat, lon) {
-  var forecastUrl = "http://api.openweathermap.org/data/2.5/forecast?";
+  var forecastUrl = "https://api.openweathermap.org/data/2.5/forecast?";
   var forecastApi = `${forecastUrl}lat=${lat}&lon=${lon}&units=imperial&appid=${weatherApiKey}`;
 
   fetch(forecastApi)
@@ -114,7 +114,7 @@ function displayForecast(dailyForecast) {
 function createForecastCard(forecast) {
   var day = dayjs(forecast.dt_txt).format("dddd");
   var iconCode = forecast.weather[0].icon;
-  var iconUrl = "http://openweathermap.org/img/w/" + iconCode + ".png";
+  var iconUrl = "https://openweathermap.org/img/w/" + iconCode + ".png";
   var forecastTemp = forecast.main.temp;
   var forecastWind = forecast.wind.speed;
   var forecastHumidity = forecast.main.humidity;
