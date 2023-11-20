@@ -19,7 +19,7 @@ function start() {
 
 // fetchGeocode uses the inputed city to get the longitude and lattidue and pass thoses into the Weather and Forecast APIs
 function fetchGeocode(city) {
-  var geocodeUrl = "http://api.openweathermap.org/geo/1.0/direct?q=";
+  var geocodeUrl = "https://api.openweathermap.org/geo/1.0/direct?q=";
   var geocodeApi = `${geocodeUrl}${city}&limit=5&appid=${weatherApiKey}`;
 
   fetch(geocodeApi)
