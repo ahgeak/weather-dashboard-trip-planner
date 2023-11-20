@@ -13,6 +13,7 @@ var weatherApiKey = "83bc9be355d058eefcfe18d969db5d21";
 var searchBtn = document.querySelector("#search");
 var userInput = document.querySelector("#input");
 var currentWeatherContainer = document.querySelector("#current");
+var historyContainer = document.querySelector("#history");
 var forecastWeatherContainer = document.querySelector("#forecast");
 var searchHistory = JSON.parse(localStorage.getItem("cities")) || [];
 // geocode API documentation: https://openweathermap.org/api/geocoding-api
@@ -61,7 +62,7 @@ function fetchWeather(lat, lon) {
       currentWeatherContainer.innerHTML = "";
       var cityNameEl = document.createElement("h2");
       var currentDate = dayjs().format("M/D/YYYY"); //use DayJS
-      console.log(currentDate);
+      // console.log(currentDate);
       // var currentDate = new Date(data.dt * 1000).toLocaleDateString();
 
       cityNameEl.textContent = `${data.name} (${currentDate})`;
@@ -104,13 +105,6 @@ function fetchForecast(lat, lon) {
       console.log(data.list);
       // console.log(data.list[2].dt_txt);
       displayForecast(data.list);
-
-      // for (var i = 0; i < weekday.length; i++) {
-      //   var forecastDate1 = new Date(data.list[i].dt_txt);
-      //   console.log(forecastDate1);
-      //   var day = forecastDate1.getDay();
-      //   console.log("This is the one: " + weekday[day]);
-      // }
     })
     .catch(function (err) {
       console.error(err);
@@ -121,21 +115,6 @@ function displayForecast(dailyForecast) {
   var startDate = dayjs().add(1, "day").startOf("day").unix();
   var endDate = dayjs().add(6, "day").startOf("day").unix();
   // use DayJS instead of new Date
-
-  // var weekday = [
-  //   "Sunday",
-  //   "Monday",
-  //   "Tuesday",
-  //   "Wednesday",
-  //   "Thursday",
-  //   "Friday",
-  //   "Saturday",
-  // ];
-
-  // var forecastDate1 = new Date(data.list[i].dt_txt);
-  //   console.log(forecastDate1);
-  //   var day = forecastDate1.getDay();
-  //   console.log("This is the one: " + weekday[day]);
 
   // next I need to get the 5 day forecast to display on the screen
   for (var i = 0; i < dailyForecast.length; i++) {
@@ -149,29 +128,39 @@ function displayForecast(dailyForecast) {
 }
 
 function createForecastCard(forecast) {
-  console.log(forecast.dt_txt);
+  // console.log(forecast.dt_txt);
   var day = dayjs(forecast.dt_txt).format("dddd");
   // console.log(day);
+
+  var iconCode = forecast.weather[0].icon;
+  var iconUrl = "http://openweathermap.org/img/w/" + iconCode + ".png";
+  var forecastTemp = forecast.main.temp;
+  var forecastWind = forecast.wind.speed;
+  var forecastHumidity = forecast.main.humidity;
 
   var cardContainerEl = document.createElement("div");
   var cardEl = document.createElement("div");
   var cardBodyEl = document.createElement("div");
   var titleEl = document.createElement("h4");
+  var iconEl = document.createElement("img");
+  var tempEl = document.createElement("p");
+  var windEl = document.createElement("p");
+  var humidityEl = document.createElement("p");
 
   cardContainerEl.append(cardEl);
   cardEl.append(cardBodyEl);
-  cardBodyEl.append(titleEl);
+  cardBodyEl.append(titleEl, iconEl, tempEl, windEl, humidityEl);
 
   titleEl.textContent = day;
+  iconEl.setAttribute("src", iconUrl);
+  tempEl.textContent = `Temp: ${forecastTemp}°F`;
+  windEl.textContent = `Wind: ${forecastWind} MPH`;
+  humidityEl.textContent = `Humidity: ${forecastHumidity}%`;
+
+  // cardContainerEl.setAttribute("class", "row");
+  // cardEl.setAttribute("class", "col");
 
   forecastWeatherContainer.append(cardContainerEl);
-  
-  // forecastWeatherContainer.innerHTML = "";
-  
-  // forecastDayTitleEl.textContent = day;
-  // forecastWeatherContainer.append(forecastDayTitleEl);
-
-  // forecastWeatherContainer.append()
 }
 
 function saveToStorage(city) {
@@ -179,7 +168,22 @@ function saveToStorage(city) {
   if (!searchHistory.includes(city)) {
     searchHistory.push(city);
     localStorage.setItem("cities", JSON.stringify(searchHistory));
+    
+    // history.innerHTML = "";
+    var historyEl = document.createElement("div");
+    var titleEl = document.createElement("button");
+    historyEl.append(titleEl);
+    titleEl.textContent = city;
+    // console.log(city);
+    historyContainer.append(historyEl);
+    return titleEl.value;
   }
 }
 
+// function searchButtonClicked(citySearched) {
+//   var city = userInput.value;
+//   fetchGeocode(citySearched);
+// }
+
 searchBtn.addEventListener("click", start);
+// historyContainer.addEventListener("click", searchButtonClicked(titleEl.value));
